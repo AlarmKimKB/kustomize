@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: <APP_NAME>
+  namespace: argocd
+  # Add a this finalizer ONLY if you want these to cascade delete.
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
+spec:
+  project: default
+
+  source:
+    repoURL:
+      https://<CODE_COMMIT_URL>
+      # https://git-codecommit.ap-northeast-2.amazonaws.com/v1/repos/retail-store-sample-app-assets-kustomize
+    targetRevision: HEAD
+    path: overlays/dev
+    kustomize:
+      # version: v5.0.1
+
+  destination:
+    server: https://kubernetes.default.svc
+    # The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
+    namespace: <APP_NAME>
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: cart
+images:
+  - name: retail-store-sample-cart
+    newName: public.ecr.aws/aws-containers/retail-store-sample-cart
+    newTag: 0.2.0
+resources:
+  - ../../base
+components:
+  - ../../components/dependencies/standalone/cart-db
